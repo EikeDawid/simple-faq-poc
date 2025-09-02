@@ -1,0 +1,36 @@
+{
+  "name": "zavamed-faq-app",
+  "version": "1.0.0",
+  "description": "A web scraper and FAQ application for ZavaMed.",
+  "main": "dist/scraper.js",
+  "scripts": {
+    "scraper": "ts-node src/scraper.ts",
+    "embed": "ts-node src/embed.ts",
+    "server": "ts-node src/server.ts",
+    "search": "ts-node src/search.ts",
+    "start": "ts-node src/server.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web-scraping",
+    "typescript",
+    "faq"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^5.1.0",
+    "puppeteer": "^24.17.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/express": "^5.0.3",
+    "@types/node": "^20.14.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
