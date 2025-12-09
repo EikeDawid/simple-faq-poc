@@ -8,5 +8,6 @@ export interface FaqWithEmbedding {
         primaryTopic: string;
         subCategory: string;
     };
-    embedding: number[];
+    questionEmbedding: number[];
+    answerEmbedding: number[];
 }

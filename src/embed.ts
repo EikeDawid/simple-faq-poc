@@ -1,12 +1,9 @@
 import * as fs from 'fs';
 import { pipeline, env } from '@xenova/transformers';
 import { FaqItem } from './models/faq-item.interface';
+import { FaqWithEmbedding } from './models/faq-with-embedding.interface';
 
 env.allowLocalModels = false;
-
-interface FaqWithEmbedding extends FaqItem {
-    embedding: number[];
-}
 
 async function generateEmbeddings() {
     console.log("Starting embedding generation process...");
@@ -18,23 +15,29 @@ async function generateEmbeddings() {
     const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
     console.log("-> Model loaded successfully.");
 
-    const textsToEmbed = faqs.map(faq => 
-        `${faq.context.primaryTopic}: ${faq.question}`
+    const questionsToEmbed = faqs.map(faq => 
+        `${faq.context.primaryTopic} ${faq.context.subCategory}: ${faq.question}`
     );
+    // const answersToEmbed = faqs.map(faq => 
+    //     `${faq.answer}`
+    // );
 
-    console.log(`-> Generating embeddings for all ${textsToEmbed.length} FAQs...`);
-    const embeddingsTensor = await extractor(textsToEmbed, { pooling: 'mean', normalize: true });
+    console.log(`-> Generating embeddings for all ${questionsToEmbed.length} FAQs...`);
+    const questionsEmbeddingsTensor = await extractor(questionsToEmbed, { pooling: 'mean', normalize: true });
+    // console.log(`-> Generating embeddings for all questions`);
+    // const answersEmbeddingsTensor = await extractor(answersToEmbed, { pooling: 'mean', normalize: true });
     console.log("-> Embeddings generated successfully.");
 
-    // --- THE FIX: Convert the Tensor to a regular JavaScript array ---
     console.log('-> Converting Tensor to a standard array...');
-    const embeddingsArray = await embeddingsTensor.tolist();
-    // --- END OF FIX ---
+    const questionsEmbeddingsArray = await questionsEmbeddingsTensor.tolist();
+    // const answersEmbeddingsArray = [] await answersEmbeddingsTensor.tolist();
+
 
     // Now, we can map over our data and use the standard array.
     const faqsWithEmbeddings: FaqWithEmbedding[] = faqs.map((faq, i) => ({
         ...faq,
-        embedding: embeddingsArray[i], // This now works correctly
+        questionEmbedding: questionsEmbeddingsArray[i], 
+        answerEmbedding: [],
     }));
 
     if (!fs.existsSync('data')) {

@@ -61,7 +61,7 @@ export class SearchEngine {
 
         const similarities = this.faqs.map(faq => ({
             faq: faq,
-            similarity: this.cosineSimilarity(queryVector, faq.embedding)
+            similarity: this.cosineSimilarity(queryVector, faq.questionEmbedding)
         }));
 
         similarities.sort((a, b) => b.similarity - a.similarity);
